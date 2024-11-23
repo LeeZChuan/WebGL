@@ -1,0 +1,50 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+}
+
+body {
+  min-height: 100vh;
+  /* transition: color 0.5s, background-color 0.5s; */
+  font-family: ZNZNF-Regular, Microsoft YaHei UI-Regular, Microsoft YaHei UI, sans-serif, 宋体 !important;
+  font-size: 14px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-1c1c1c);
+  // 禁止左键拖拽
+  // -moz-user-select: none; /*火狐*/
+  // -webkit-user-select: none; /*webkit浏览器*/
+  // -ms-user-select: none; /*IE10*/
+  // -khtml-user-select: none; /*早期浏览器*/
+  // user-select: none;
+}
+
+@font-face {
+  font-family: 'ZNZNF-Regular';
+  src: url('./fonts/znzNF6006-Regular.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ZNZNF-Medium';
+  src: url('./fonts/znzNF6006-medium.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ZNZNF-Bold';
+  src: url('./fonts/znzNF6006-Bold.ttf');
+  font-weight: normal;
+  font-style: normal;
+}

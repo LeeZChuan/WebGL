@@ -1,0 +1,155 @@
+/** 各个配色方案的枚举值以 /src/utils/constant.ts中的THEME_TYPE 枚举为准 */
+
+/* 默认 夜间模式 theme */
+:root[data-theme='black'],
+:root[data-theme='znz'],
+:root[data-theme='blacksolidkline'],
+:root[data-theme='darkgray'] {
+  --color-white-5: rgba(255, 255, 255, 0.15);
+  --color-white-10: #171717;
+  --color-white-15: rgba(255, 255, 255, 0.15);
+  --color-white-25: rgba(255, 255, 255, 0.25);
+  --color-white-28: rgba(255, 255, 255, 0.28);
+  --color-white-46: rgba(255, 255, 255, 0.46);
+  --color-white-63: rgba(255, 255, 255, 0.63);
+  --color-white-91: rgba(255, 255, 255, 0.91);
+  --color-black-30: rgba(0, 0, 0, 0.3);
+  // 数据中心 表格选中高亮状态
+  --color-data-center-lighted: rgba(255, 255, 255, 0.05);
+  // 时间选择范围选择日期颜色
+  --color-gray-27: rgba(255, 255, 255, 0.28);
+  --color-255255: #666768;
+  --color-1c1c1c: #1c1c1c;
+  --color-ee3f4d: #ee3f4d;
+  --color-49BF68: #49bf68;
+  --color-212121: #212121;
+  --color-header: #212121;
+  --color-424242: #424242;
+  --color-282828: #282828;
+  --color-0f0f0f: #0f0f0f;
+  --color-333435: #333435;
+  --color-666768: #666768;
+  --color-171717: #171717;
+  --color-505152: #505152;
+  --color-245246: #171717;
+  // 日期选择器下拉框内边框
+  --color-E6E6E8: #333435;
+  // 背景色
+  --color-ffffff: #171717;
+  --color-2A2A2C: #ebeced;
+  --color-000000: #ffffff;
+  --color-131313: #131313;
+  --color-a9a9a9: #a9a9a9;
+  --color-ABACAE: #abacae;
+  --color-5F5F5F: #5f5f5f;
+  --color-DFDFDF: #dfdfdf;
+  --color-F15C68: #f15c68;
+  --color-F26F7A: #f26f7a;
+  --color-131312: #131313;
+  --color-1c1c12: #1c1c1c;
+  --color-b0b0b0: #b0b0b0;
+  --color-828487: #828487;
+  --color-333436: #333436;
+  --color-8C8C8D: #8c8c8d;
+  // 事件分析平台股票名称
+  --color-F9C124: #f9c124;
+  // 数据中心批露上榜股票名称
+  --color-FFD255: #ffd255;
+
+  // 图片
+  --img-data-center-dt-no-data: url('@/imgs/dataCenter/dark/dataCenterDTNoData.png');
+  --img-data-center-stock-search: url('@/imgs/dataCenter/dark/dataCenterStockSearch.png');
+  --img-data-center-select-rank-date-dropdown-arrow: url('@/imgs/dataCenter/dark/selectRankDateDropdownArrow.png');
+  --img-data-center-question-tip: url('@/imgs/dataCenter/dark/dataCenterQuestionTip.png');
+  --img-event-analysis-copy-icon: url('@/imgs/copy.png');
+  // 事件分析平台放大镜
+  --img-event-analysis-amplify-icon: url('@/imgs/search.png');
+  --img-event-analysis-change-amplify-icon: url('@/imgs/reduce.png');
+  // 股票池自选股的三个图标星
+  --img-event-analysis-select-add-icon: url('@/imgs/table/add.png');
+  --img-event-analysis-select-spacial-icon: url('@/imgs/table/add-spacial.png');
+  --img-event-analysis-select-remove-icon: url('@/imgs/table/remove-spacial.png');
+  // 压缩图标 通用
+  --img-event-analysis-compress-up-icon: url('@/imgs/expend.png');
+  --img-event-analysis-compress-down-icon: url('@/imgs/retract.png');
+  // 拉伸图标 通用
+  --img-event-analysis-draw-icon: url('@/imgs/resizeBar.png');
+  // input删除按钮图标
+  --img-component--input-delete-icon: url('@/imgs/delete.png');
+  // 基础表格更多加载箭头
+  --img-component--down-icon: url('@/imgs/dataCenter/dark/dataCenterDown.png');
+}
+
+/* 白天模式 theme */
+:root[data-theme='white'],
+:root[data-theme='whiteblack'],
+:root[data-theme='whitegray'],
+:root[data-theme='gray'] {
+  --color-white-5: rgba(0, 0, 0, 0.05);
+  --color-white-10: rgba(0, 0, 0, 0.10);
+  --color-white-15: rgba(0, 0, 0, 0.1);
+  --color-white-25: rgba(0, 0, 0, 0.15);
+  --color-white-28: rgba(0, 0, 0, 0.27);
+  --color-white-46: rgba(0, 0, 0, 0.4);
+  --color-white-63: rgba(0, 0, 0, 0.61);
+  --color-white-91: rgba(0, 0, 0, 0.83);
+  --color-black-30: rgba(0, 0, 0, 0.03);
+  --color-gray-27: rgba(0, 0, 0, 0.27);
+  --color-data-center-lighted: rgba(0, 0, 0, 0.05);
+  --color-1c1c1c: #ffffff;
+  --color-ee3f4d: #ee3f4d;
+  --color-49BF68: #49bf68;
+  --color-212121: #ffffff;
+  --color-header: #eeeeef;
+  --color-424242: rgba(0, 0, 0, 0.1);
+  --color-282828: #eeeeef;
+  --color-0f0f0f: #f8f9fa;
+  --color-333435: #e2e2e3;
+  --color-666768: #e9e9ea;
+  --color-171717: #f5f5f6;
+  --color-505152: #9a9a9c;
+  --color-245246: #f5f5f6;
+  --color-E6E6E8: #e6e6e8;
+  --color-ffffff: #ffffff;
+  --color-2A2A2C: #2a2a2c;
+  --color-000000: #000000;
+  --color-131313: #f5f5f6;
+  --color-a9a9a9: #565658;
+  --color-ABACAE: #565658;
+  --color-255255: #c0c0c1;
+  --color-5F5F5F: #bcbcbc;
+  --color-DFDFDF: #2b2b2b;
+  --color-F15C68: #d63945;
+  --color-F26F7A: #cb3642;
+  --color-131312: #ffffff;
+  --color-1c1c12: #f1f1f1;
+  --color-b0b0b0: #585858;
+  --color-828487: #757577;
+  --color-333436: #e2e2e3;
+  --color-8C8C8D: #888888;
+  --color-F9C124: #fc8c22;
+  --color-FFD255: #fc8c22;
+
+  // 图片
+  --img-data-center-dt-no-data: url('@/imgs/dataCenter/light/dataCenterDTNoData.png');
+  --img-data-center-stock-search: url('@/imgs/dataCenter/light/dataCenterStockSearch.png');
+  --img-data-center-select-rank-date-dropdown-arrow: url('@/imgs/dataCenter/light/selectRankDateDropdownArrow.png');
+  --img-data-center-question-tip: url('@/imgs/dataCenter/light/dataCenterQuestionTip.png');
+  --img-event-analysis-copy-icon: url('@/imgs/copy-light.png');
+  --img-event-analysis-amplify-icon: url('@/imgs/search-light.png');
+  --img-event-analysis-change-amplify-icon: url('@/imgs/reduce-light.png');
+  --img-event-analysis-select-add-icon: url('@/imgs/table/add-light.png');
+  --img-event-analysis-select-spacial-icon: url('@/imgs/table/add-spacial-light.png');
+  --img-event-analysis-select-remove-icon: url('@/imgs/table/remove-spacial-light.png');
+  --img-event-analysis-compress-up-icon: url('@/imgs/expend-light.png');
+  --img-event-analysis-compress-down-icon: url('@/imgs/retract-light.png');
+  --img-event-analysis-draw-icon: url('@/imgs/resizeBar-light.png');
+  --img-component--input-delete-icon: url('@/imgs/delete-light.png');
+  --img-component--down-icon: url('@/imgs/dataCenter/light/dataCenterDown.png');
+}
+
+:root[data-theme='black'],
+:root[data-theme='blacksolidkline'],
+:root[data-theme='darkgray'] {
+  --color-49BF68: rgb(64, 224, 208);
+}

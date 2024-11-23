@@ -1,0 +1,19 @@
+// 单行文字超出显示 ...
+@mixin els {
+  white-space: nowrap; /* 防止文字换行 */
+  overflow: hidden; /* 隐藏溢出部分 */
+  text-overflow: ellipsis; /* 文字超出时显示省略号 */
+}
+
+@mixin flexMixin($fd, $jc, $ai, $ac) {
+  display: flex;
+  flex-direction: $fd;
+  justify-content: $jc;
+  align-items: $ai;
+  align-content: $ac;
+}
+
+@mixin flexNormal($fd) {
+  display: flex;
+  flex-direction: $fd;
+}
