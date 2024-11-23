@@ -20,20 +20,21 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import ThreeBall from './ThreeBall/index.vue'
 import WebGLWater from './WebGLWater/index.vue'
 
-const tabs = ref(['WebGLWater', 'WebGL'])
+const tabs = ref(['ThreeBall', 'WebGLWater'])
 const activeTab = ref(0)
 
 const currentTableComponent = computed(() => {
   if (activeTab.value === 0) {
-    return WebGLWater
+    return ThreeBall
   } else if (activeTab.value === 1) {
     return null
   } else if (activeTab.value === 2) {
     return null
   } else {
-    return null
+    return WebGLWater
   }
 })
 </script>
