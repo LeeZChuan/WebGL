@@ -1,6 +1,6 @@
 import {
   OrthographicCamera,
-  PlaneBufferGeometry,
+  PlaneGeometry,
   RawShaderMaterial,
   WebGLRenderer,
   Texture,
@@ -10,22 +10,22 @@ import { loadShader } from '../core/shaders'
 
 export class Debug {
   private _camera: OrthographicCamera
-  private _geometry: PlaneBufferGeometry
+  private _geometry: PlaneGeometry
   private _material!: RawShaderMaterial
   private _mesh!: Mesh
 
   constructor() {
     // 初始化一个正交摄像机，适用于2D纹理的渲染
     this._camera = new OrthographicCamera(0, 1, 1, 0, 0, 1)
-    this._geometry = new PlaneBufferGeometry()
+    this._geometry = new PlaneGeometry()
 
     this.initMaterial()
   }
 
   async initMaterial() {
     // 加载顶点和片段着色器
-    const vertexShader = await loadShader('shaders/debug/vertex.glsl')
-    const fragmentShader = await loadShader('shaders/debug/fragment.glsl')
+    const vertexShader = await loadShader('/shaders/debug/vertex.glsl')
+    const fragmentShader = await loadShader('/shaders/debug/fragment.glsl')
 
     // 创建材质
     this._material = new RawShaderMaterial({

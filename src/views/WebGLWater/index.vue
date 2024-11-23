@@ -25,21 +25,19 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { createScene } from '@/three/core/scene'
-import { WaterSimulation } from '@/three/components/Water'
-import { Caustics } from '@/three/components/Caustics'
-import { startAnimation } from '@/three/animations/mainLoop'
-import { PlaneBufferGeometry } from 'three'
+import { createScene } from '@/views/WebGLWater/three/core/scene'
+import { Water } from '@/views/WebGLWater/three/components/Water'
+import { startAnimation } from '@/views/WebGLWater/three/animations/mainLoop'
 
 // 响应式Canvas引用
 const canvas = ref<HTMLCanvasElement | null>(null)
 
 // 模块实例
-let waterSimulation: WaterSimulation
-let caustics: Caustics
+let waterSimulation: Water
 
 // 鼠标交互相关
 const mouse = { x: 0, y: 0 }
+
 function onMouseMove(event: MouseEvent) {
   if (!canvas.value) return
 
@@ -47,44 +45,22 @@ function onMouseMove(event: MouseEvent) {
   mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
   mouse.y = (-(event.clientY - rect.top) / rect.height) * 2 + 1
 
-  // 使用鼠标位置与水波模拟交互
+  // 触发水波模拟
   waterSimulation.addDrop(null, mouse.x, mouse.y, 0.03, 0.04)
 }
 
-// Vue生命周期钩子
-onMounted(() => {
+onMounted(async () => {
   if (!canvas.value) return
-  console.log(createScene, 'createScene')
 
-  // 初始化Three.js场景
   const { scene, camera, renderer } = createScene(canvas.value)
-  console.log(scene, camera, renderer)
 
-  // 初始化水波模拟
-  waterSimulation = new WaterSimulation()
+  waterSimulation = new Water()
+  await waterSimulation.initMaterials()
 
-  // 初始化光学折射
-  const lightFrontGeometry = new PlaneBufferGeometry(2, 2)
-  caustics = new Caustics(lightFrontGeometry)
-
-  // 开始渲染循环
+  // 开始动画
   startAnimation(renderer, scene, camera, () => {
-    // 更新水波模拟
     waterSimulation.stepSimulation(renderer)
     waterSimulation.updateNormals(renderer)
-
-    // 获取水波纹理
-    const waterTexture = waterSimulation.texture.texture
-
-    // 更新光学折射
-    caustics.update(renderer, waterTexture)
-
-    // 获取Caustics纹理
-    const causticsTexture = caustics.texture.texture
-
-    // 示例：在场景中渲染水面和Caustics效果（如果有其他组件可在此使用）
-    // water.draw(renderer, waterTexture, causticsTexture);
-    // pool.draw(renderer, waterTexture, causticsTexture);
   })
 })
 </script>

@@ -92,8 +92,8 @@ export class Pool {
   }
 
   async initMaterial() {
-    const vertexShader = await loadShader('shaders/pool/vertex.glsl')
-    const fragmentShader = await loadShader('shaders/pool/fragment.glsl')
+    const vertexShader = await loadShader('/shaders/pool/vertex.glsl')
+    const fragmentShader = await loadShader('/shaders/pool/fragment.glsl')
 
     this._material = new RawShaderMaterial({
       uniforms: {
