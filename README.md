@@ -38,11 +38,7 @@ src/
 │   │   ├── Debug.ts           # 调试模块
 │   ├── animations/
 │   │   ├── mainLoop.ts        # 主渲染循环
-├── components/
-│   ├── ThreeScene.vue         # Vue 主场景组件
-│   ├── DebugComponent.vue     # Vue 调试组件
-│   ├── WaterComponent.vue     # Vue 水波组件
-└── main.ts                    # Vue 入口文件
+└── index.vue                    # Vue 入口文件
 ```
 
 ## Project Setup
