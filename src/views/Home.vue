@@ -3,12 +3,12 @@
     <div class="sidebar">
       <ul>
         <li
-          v-for="(tab, index) in tabs"
-          :key="index"
+          v-for="(page, index) in pageConfig"
+          :key="page.title"
           :class="{ active: index === activeTab }"
-          @click="activeTab = index"
+          @click="changeComponent(page.component, index)"
         >
-          {{ tab }}
+          {{ page.title }}
         </li>
       </ul>
     </div>
@@ -19,24 +19,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import ThreeBall from './ThreeBall/index.vue'
-import WebGLWater from './WebGLWater/index.vue'
+import { ref, shallowRef } from 'vue'
+import {pageConfig} from './config';
+const currentTableComponent=shallowRef(pageConfig[0].component);
+const activeTab = ref(0);
+const changeComponent = (component: any, index: number) => {
+  currentTableComponent.value = component;
+  activeTab.value = index;
+}
 
-const tabs = ref(['ThreeBall', 'WebGLWater'])
-const activeTab = ref(0)
-
-const currentTableComponent = computed(() => {
-  if (activeTab.value === 0) {
-    return ThreeBall
-  } else if (activeTab.value === 1) {
-    return null
-  } else if (activeTab.value === 2) {
-    return null
-  } else {
-    return WebGLWater
-  }
-})
+// const currentTableComponent = computed(() => {
+  
+// })
 </script>
 
 <style scoped>

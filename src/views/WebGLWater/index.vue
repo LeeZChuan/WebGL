@@ -1,5 +1,6 @@
 <template>
-  <canvas ref="canvas" @mousemove="onMouseMove"></canvas>
+  <!-- <canvas ref="canvas"></canvas> -->
+  <!-- <canvas ref="canvas" @mousemove="onMouseMove"></canvas> -->
   <div id="loading" ref="loading">Loading...</div>
   <div id="help">
     <h1>WebGL Water</h1>
@@ -30,39 +31,39 @@ import { Water } from '@/views/WebGLWater/three/components/Water'
 import { startAnimation } from '@/views/WebGLWater/three/animations/mainLoop'
 
 // 响应式Canvas引用
-const canvas = ref<HTMLCanvasElement | null>(null)
+// const canvas = ref<HTMLCanvasElement | null>(null)
 
-// 模块实例
-let waterSimulation: Water
+// // 模块实例
+// let waterSimulation: Water
 
-// 鼠标交互相关
-const mouse = { x: 0, y: 0 }
+// // 鼠标交互相关
+// const mouse = { x: 0, y: 0 }
 
-function onMouseMove(event: MouseEvent) {
-  if (!canvas.value) return
+// function onMouseMove(event: MouseEvent) {
+//   if (!canvas.value) return
 
-  const rect = canvas.value.getBoundingClientRect()
-  mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
-  mouse.y = (-(event.clientY - rect.top) / rect.height) * 2 + 1
+//   const rect = canvas.value.getBoundingClientRect()
+//   mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
+//   mouse.y = (-(event.clientY - rect.top) / rect.height) * 2 + 1
 
-  // 触发水波模拟
-  waterSimulation.addDrop(null, mouse.x, mouse.y, 0.03, 0.04)
-}
+//   // 触发水波模拟
+//   waterSimulation.addDrop(null, mouse.x, mouse.y, 0.03, 0.04)
+// }
 
-onMounted(async () => {
-  if (!canvas.value) return
+// onMounted(async () => {
+//   if (!canvas.value) return
 
-  const { scene, camera, renderer } = createScene(canvas.value)
+//   const { scene, camera, renderer } = createScene(canvas.value)
 
-  waterSimulation = new Water()
-  await waterSimulation.initMaterials()
+//   waterSimulation = new Water()
+//   await waterSimulation.initMaterials()
 
-  // 开始动画
-  startAnimation(renderer, scene, camera, () => {
-    waterSimulation.stepSimulation(renderer)
-    waterSimulation.updateNormals(renderer)
-  })
-})
+//   // 开始动画
+//   startAnimation(renderer, scene, camera, () => {
+//     waterSimulation.stepSimulation(renderer)
+//     waterSimulation.updateNormals(renderer)
+//   })
+// })
 </script>
 
 <style scoped>
