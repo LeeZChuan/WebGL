@@ -20,17 +20,13 @@
 
 <script setup lang="ts">
 import { ref, shallowRef } from 'vue'
-import {pageConfig} from './config';
-const currentTableComponent=shallowRef(pageConfig[0].component);
-const activeTab = ref(0);
+import { pageConfig } from './config'
+const currentTableComponent = shallowRef(pageConfig[0].component)
+const activeTab = ref(0)
 const changeComponent = (component: any, index: number) => {
-  currentTableComponent.value = component;
-  activeTab.value = index;
+  currentTableComponent.value = component
+  activeTab.value = index
 }
-
-// const currentTableComponent = computed(() => {
-  
-// })
 </script>
 
 <style scoped>
