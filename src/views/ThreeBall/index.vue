@@ -1,15 +1,27 @@
 <template>
   <!-- 创建一个 canvas 元素，用于渲染 Three.js 场景 -->
   <canvas ref="canvas"></canvas>
+  <div id="help">
+    <h1>摄像机操作</h1>
+    <p></p>
+    <h2>以下是摄像机的操作提示:</h2>
+    <ul>
+      <li>双手指可以进行缩放</li>
+      <li>点击屏幕然后可以实现旋转</li>
+      <li>点击屏幕横向移动是左右旋转</li>
+      <li>点击屏幕竖向移动是上下旋转</li>
+      <li>键盘的方向键可以实现相机横向平移和纵向平移</li>
+    </ul>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import * as THREE from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 // 定义一个对 canvas 的引用
 const canvas = ref<HTMLCanvasElement | null>(null)
-
 
 onMounted(() => {
   if (!canvas.value) return // 如果 canvas 不存在，则不继续初始化
@@ -29,6 +41,7 @@ onMounted(() => {
   // 创建渲染器，并将其绑定到 canvas 上
   const renderer = new THREE.WebGLRenderer({
     canvas: canvas.value, // 指定渲染目标为 canvas
+    antialias: true, // 开启抗锯齿
   })
   renderer.setSize(window.innerWidth, window.innerHeight) // 设置渲染器尺寸为窗口大小
 
@@ -37,6 +50,28 @@ onMounted(() => {
   renderer.outputEncoding = THREE.sRGBEncoding // 启用伽马校正
   renderer.toneMapping = THREE.ACESFilmicToneMapping // 使用 ACES 色调映射
   renderer.toneMappingExposure = 1.5 // 提高曝光度
+
+  // 初始化 OrbitControls
+  const controls = new OrbitControls(camera, renderer.domElement)
+  controls.enableDamping = true // 启用阻尼（惯性）
+  controls.dampingFactor = 0.05
+  controls.screenSpacePanning = false
+  controls.minDistance = 200 // 最小缩放距离
+  controls.maxDistance = 1000 // 最大缩放距离
+  controls.enablePan = true // 启用平移
+  controls.enableZoom = true // 启用缩放
+  controls.enableRotate = true // 启用旋转
+
+  // 重新绑定鼠标按钮：左键用于平移
+  controls.mouseButtons.LEFT = THREE.MOUSE.PAN
+  // 禁用右键（可选）
+  controls.mouseButtons.RIGHT = THREE.MOUSE.NONE
+
+  // 设置平移和缩放的限制
+  controls.minDistance = 200 // 最小缩放距离
+  controls.maxDistance = 1000 // 最大缩放距离
+  controls.screenSpacePanning = true // 使用屏幕空间平移
+
   // 加载纹理
   const textureLoader = new THREE.TextureLoader()
   const mapTexture = textureLoader.load('/background.jpg', () => {
@@ -49,7 +84,7 @@ onMounted(() => {
 
   // 创建一个球体几何体，并增加其细分
   // radius: 100, widthSegments: 1024, heightSegments: 1024
-  const geometry = new THREE.SphereGeometry(100, 1024, 1024)
+  const geometry = new THREE.SphereGeometry(100, 32, 32) // 降低细分以提升性能
 
   // 创建物理材质，并绑定纹理贴图
   const material = new THREE.MeshPhysicalMaterial({
@@ -59,14 +94,21 @@ onMounted(() => {
     roughness: 0.5, // 表面粗糙度
   })
 
+  // 定义一个函数来生成随机位置，范围可以根据需要调整
+  function getRandomPosition(maxDistance: number) {
+    const x = Math.random() * maxDistance - maxDistance / 2
+    const y = (Math.random() * maxDistance) / 2 + 50 // 确保球体在空中
+    const z = Math.random() * maxDistance - maxDistance / 2
+    return new THREE.Vector3(x, y, z)
+  }
+
   // 创建球体 Mesh，将几何体和材质绑定在一起
-  const sphere = new THREE.Mesh(geometry, material) as THREE.Mesh
-  const sphere1 = new THREE.Mesh(geometry, material)
-  sphere1.position.x = 100
-  sphere1.position.y = 200
-  sphere1.position.z = 100
-  scene.add(sphere) // 将球体添加到场景中
-  scene.add(sphere1)
+  for (let i = 0; i < 1; i++) { // 修改为生成五个球体
+    const sphere = new THREE.Mesh(geometry, material) as THREE.Mesh
+    const position = getRandomPosition(200) // 最大距离设置为200
+    sphere.position.set(position.x, position.y, position.z)
+    scene.add(sphere)
+  }
 
   // 添加环境光，提供基础的整体照明
   const ambientLight = new THREE.AmbientLight(0xffffff, 2) // 颜色为白色，强度为 2
@@ -81,50 +123,185 @@ onMounted(() => {
   const rotationSpeed = 0.001 // 每帧的偏移量
   let rotationDirection = 1 // 1: 正向，-1: 反向，0: 停止
 
-  // 添加键盘事件，用于切换旋转方向
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'ArrowRight') rotationDirection = 1 // 按右箭头，顺时针旋转
-    if (event.key === 'ArrowLeft') rotationDirection = -1 // 按左箭头，逆时针旋转
-    if (event.key === ' ') rotationDirection = 0 // 按空格键，停止旋转
-  })
+  // 定义键盘控制变量
+  interface Movement {
+    forward: boolean
+    backward: boolean
+    left: boolean
+    right: boolean
+    up: boolean
+    down: boolean
+  }
 
-  canvas.value.addEventListener('mousemove',(event)=>{
-    camera.position.z = event.clientX / window.innerWidth * 1000
-    if(camera.position.z>=1000){
-      camera.position.z = 1000
-    }
-    if(camera.position.z<=200){
-      camera.position.z = 200
-    }
-    
-  })
+  const movement: Movement = {
+    forward: false,
+    backward: false,
+    left: false,
+    right: false,
+    up: false,
+    down: false,
+  }
 
-//   canvas.value.addEventListener('touchstart', function(e) {
-//   const touches = e.touches;
-//   console.log(touches,'touches');
-  
-//   if (touches.length == 2) { // 双指触摸
-//    const  startX = Math.abs(touches[0].pageX - touches[1].pageX);
-//    const startY = Math.abs(touches[0].pageY - touches[1].pageY);
-//    const distanceStart = Math.sqrt(startX * startX + startY * startY); // 计算两个触点之间的距离
-//    camera.position.z=distanceStart;
-//    if(camera.position.z>=1000){
-//       camera.position.z = 1000
-//     }
-//     if(camera.position.z<=200){
-//       camera.position.z = 200
-//     }
-//   }
-// });
+  // 定义移动速度（单位：每秒移动多少）
+  const moveSpeed = 200 // 可根据需要调整
+
+  // 定义移动范围
+  const boundary = {
+    xMin: -500,
+    xMax: 500,
+    yMin: -500,
+    yMax: 500,
+    zMin: 200,
+    zMax: 1000,
+  }
+
+  // 添加键盘事件，用于移动摄像头
+  const onKeyDown = (event: KeyboardEvent) => {
+    switch (event.key) {
+      case 'ArrowUp':
+      case 'w':
+      case 'W':
+        movement.forward = true
+        break
+      case 'ArrowDown':
+      case 's':
+      case 'S':
+        movement.backward = true
+        break
+      case 'ArrowLeft':
+      case 'a':
+      case 'A':
+        movement.left = true
+        break
+      case 'ArrowRight':
+      case 'd':
+      case 'D':
+        movement.right = true
+        break
+      case 'q':
+      case 'Q':
+        movement.up = true
+        break
+      case 'e':
+      case 'E':
+        movement.down = true
+        break
+      default:
+        break
+    }
+  }
+
+  const onKeyUp = (event: KeyboardEvent) => {
+    switch (event.key) {
+      case 'ArrowUp':
+      case 'w':
+      case 'W':
+        movement.forward = false
+        break
+      case 'ArrowDown':
+      case 's':
+      case 'S':
+        movement.backward = false
+        break
+      case 'ArrowLeft':
+      case 'a':
+      case 'A':
+        movement.left = false
+        break
+      case 'ArrowRight':
+      case 'd':
+      case 'D':
+        movement.right = false
+        break
+      case 'q':
+      case 'Q':
+        movement.up = false
+        break
+      case 'e':
+      case 'E':
+        movement.down = false
+        break
+      default:
+        break
+    }
+  }
+
+  // 添加事件监听器
+  document.addEventListener('keydown', onKeyDown)
+  document.addEventListener('keyup', onKeyUp)
+
+  // 在组件卸载时移除事件监听器
+  onBeforeUnmount(() => {
+    document.removeEventListener('keydown', onKeyDown)
+    document.removeEventListener('keyup', onKeyUp)
+  })
 
   // 动画循环
+  let previousTime = performance.now()
+
   function animate() {
     requestAnimationFrame(animate) // 请求下一帧动画
+    controls.update() // 仅在启用阻尼时需要
 
     // 更新纹理的水平偏移，实现贴图滚动
     if (mapTexture) {
       mapTexture.offset.x += rotationSpeed * rotationDirection
     }
+
+    // 计算时间差（秒）
+    const currentTime = performance.now()
+    const deltaTime = (currentTime - previousTime) / 1000
+    previousTime = currentTime
+
+    // 计算实际移动距离
+    const actualMoveSpeed = moveSpeed * deltaTime
+
+    // 计算摄像机的方向向量（前方向）
+    const direction = new THREE.Vector3()
+    camera.getWorldDirection(direction).normalize()
+
+    // 计算右方向向量
+    const right = new THREE.Vector3()
+    right.crossVectors(direction, camera.up).normalize()
+
+    // 计算上方向向量
+    const up = new THREE.Vector3()
+    up.copy(camera.up).normalize()
+
+    // 根据键盘输入调整摄像机和控制器的目标位置
+    if (movement.forward) {
+      camera.position.addScaledVector(direction, actualMoveSpeed)
+      controls.target.addScaledVector(direction, actualMoveSpeed)
+    }
+    if (movement.backward) {
+      camera.position.addScaledVector(direction, -actualMoveSpeed)
+      controls.target.addScaledVector(direction, -actualMoveSpeed)
+    }
+    if (movement.left) {
+      camera.position.addScaledVector(right, -actualMoveSpeed)
+      controls.target.addScaledVector(right, -actualMoveSpeed)
+    }
+    if (movement.right) {
+      camera.position.addScaledVector(right, actualMoveSpeed)
+      controls.target.addScaledVector(right, actualMoveSpeed)
+    }
+    if (movement.up) {
+      camera.position.addScaledVector(up, actualMoveSpeed)
+      controls.target.addScaledVector(up, actualMoveSpeed)
+    }
+    if (movement.down) {
+      camera.position.addScaledVector(up, -actualMoveSpeed)
+      controls.target.addScaledVector(up, -actualMoveSpeed)
+    }
+
+    // 限制摄像机和控制器目标的位置在边界内
+    camera.position.x = THREE.MathUtils.clamp(camera.position.x, boundary.xMin, boundary.xMax)
+    camera.position.y = THREE.MathUtils.clamp(camera.position.y, boundary.yMin, boundary.yMax)
+    camera.position.z = THREE.MathUtils.clamp(camera.position.z, boundary.zMin, boundary.zMax)
+
+    controls.target.x = THREE.MathUtils.clamp(controls.target.x, boundary.xMin, boundary.xMax)
+    controls.target.y = THREE.MathUtils.clamp(controls.target.y, boundary.yMin, boundary.yMax)
+    controls.target.z = THREE.MathUtils.clamp(controls.target.z, boundary.zMin, boundary.zMax)
 
     // 渲染场景
     renderer.render(scene, camera)
@@ -145,5 +322,29 @@ canvas {
   height: 100%; /* 设置 canvas 的高度为 100% */
   width: 100%; /* 设置 canvas 的宽度为 100% */
   display: block; /* 去掉 canvas 默认的 inline 样式 */
+}
+
+ul {
+  color: aliceblue;
+  padding: 0 0 0 20px;
+}
+h1 {
+  color: aliceblue;
+  font: bold italic 30px/30px Georgia;
+  text-align: center;
+}
+h2 {
+  color: aliceblue;
+  font: bold italic 17px/17px Georgia;
+  padding-top: 10px;
+}
+#help {
+  color: aliceblue;
+  position: absolute;
+  bottom: 50px;
+  right: 0;
+  width: 280px;
+  padding-right: 20px;
+  z-index: 100;
 }
 </style>
