@@ -1,6 +1,6 @@
 <template>
   <!-- 创建一个 canvas 元素，用于渲染 Three.js 场景 -->
-  <canvas ref="canvas" @mousemove="onMouseMove"></canvas>
+  <canvas ref="canvas"></canvas>
 </template>
 
 <script setup lang="ts">
@@ -10,19 +10,6 @@ import * as THREE from 'three'
 // 定义一个对 canvas 的引用
 const canvas = ref<HTMLCanvasElement | null>(null)
 
-// 用于存储鼠标位置的变量
-let mouseX = 0,
-  mouseY = 0
-
-// 存储球体 Mesh 的变量
-let sphere: THREE.Mesh
-
-// 鼠标移动事件，用于实时更新鼠标位置
-function onMouseMove(event: MouseEvent) {
-  // 将鼠标坐标归一化到 [-1, 1] 范围
-  mouseX = (event.clientX / window.innerWidth) * 2 - 1
-  mouseY = -(event.clientY / window.innerHeight) * 2 + 1
-}
 
 onMounted(() => {
   if (!canvas.value) return // 如果 canvas 不存在，则不继续初始化
@@ -32,12 +19,12 @@ onMounted(() => {
 
   // 创建透视相机
   const camera = new THREE.PerspectiveCamera(
-    75, // 视角（FOV）
+    70, // 视角（FOV）
     window.innerWidth / window.innerHeight, // 宽高比
     0.1, // 近裁剪面
     1000, // 远裁剪面
   )
-  camera.position.z = 300 // 将相机移到 z 轴正方向
+  camera.position.z = 400 // 将相机移到 z 轴正方向
 
   // 创建渲染器，并将其绑定到 canvas 上
   const renderer = new THREE.WebGLRenderer({
@@ -73,8 +60,13 @@ onMounted(() => {
   })
 
   // 创建球体 Mesh，将几何体和材质绑定在一起
-  sphere = new THREE.Mesh(geometry, material)
+  const sphere = new THREE.Mesh(geometry, material) as THREE.Mesh
+  const sphere1 = new THREE.Mesh(geometry, material)
+  sphere1.position.x = 100
+  sphere1.position.y = 200
+  sphere1.position.z = 100
   scene.add(sphere) // 将球体添加到场景中
+  scene.add(sphere1)
 
   // 添加环境光，提供基础的整体照明
   const ambientLight = new THREE.AmbientLight(0xffffff, 2) // 颜色为白色，强度为 2
@@ -95,6 +87,35 @@ onMounted(() => {
     if (event.key === 'ArrowLeft') rotationDirection = -1 // 按左箭头，逆时针旋转
     if (event.key === ' ') rotationDirection = 0 // 按空格键，停止旋转
   })
+
+  canvas.value.addEventListener('mousemove',(event)=>{
+    camera.position.z = event.clientX / window.innerWidth * 1000
+    if(camera.position.z>=1000){
+      camera.position.z = 1000
+    }
+    if(camera.position.z<=200){
+      camera.position.z = 200
+    }
+    
+  })
+
+//   canvas.value.addEventListener('touchstart', function(e) {
+//   const touches = e.touches;
+//   console.log(touches,'touches');
+  
+//   if (touches.length == 2) { // 双指触摸
+//    const  startX = Math.abs(touches[0].pageX - touches[1].pageX);
+//    const startY = Math.abs(touches[0].pageY - touches[1].pageY);
+//    const distanceStart = Math.sqrt(startX * startX + startY * startY); // 计算两个触点之间的距离
+//    camera.position.z=distanceStart;
+//    if(camera.position.z>=1000){
+//       camera.position.z = 1000
+//     }
+//     if(camera.position.z<=200){
+//       camera.position.z = 200
+//     }
+//   }
+// });
 
   // 动画循环
   function animate() {
