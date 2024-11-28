@@ -121,7 +121,7 @@ onMounted(() => {
 
   // 定义贴图旋转的速度和方向
   const rotationSpeed = 0.001 // 每帧的偏移量
-  let rotationDirection = 1 // 1: 正向，-1: 反向，0: 停止
+  const rotationDirection = 1 // 1: 正向，-1: 反向，0: 停止
 
   // 定义键盘控制变量
   interface Movement {
